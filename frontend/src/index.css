@@ -1,0 +1,776 @@
+/* ============================================
+   ARQUIVO: frontend/src/index.css
+   COPIE TODO ESTE CONTEÚDO
+   ============================================ */
+
+/* TODAS as regras @import devem vir primeiro */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300');
+
+/* Depois, as diretivas do Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================================
+   RESET E CONFIGURAÇÕES GLOBAIS
+   =================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%; /* Usar 100% em vez de 100vh para melhor compatibilidade em dispositivos móveis */
+  overflow-x: hidden; /* Evita scroll horizontal */
+  overflow-y: hidden; /* Mantém o overflow-y hidden para o body, o container interno terá scroll */
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #0a0a1a; /* Cor de fundo padrão */
+  color: #e0e0e0; /* Cor de texto padrão */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh; /* Mantém o min-height para o root */
+  position: relative; /* Necessário para posicionamento de elementos filhos */
+}
+
+/* ===================================
+   SCROLLBAR CUSTOMIZADA GLOBAL (para elementos que tiverem overflow)
+   =================================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 255, 0.4) rgba(10, 15, 30, 0.92);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(10, 15, 30, 0.92);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ffff, #0088ff);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00ffff, #00aaff);
+}
+
+/* ===================================
+   CONTAINER PRINCIPAL
+   =================================== */
+.app-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.background-video {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover !important;
+  z-index: 0 !important;
+  pointer-events: none;
+}
+
+/* ===================================
+   CONTROLE DE ÁUDIO
+   =================================== */
+.audio-control {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(0, 255, 255, 0.5);
+  border-radius: 50%;
+  width: 55px; /* Tamanho maior */
+  height: 55px; /* Tamanho maior */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #00ffff; /* Cor do ícone */
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.audio-control:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  border-color: #00ffff;
+}
+
+.audio-control:active {
+  transform: scale(1.05);
+}
+
+.audio-control span {
+  font-size: 1.8rem; /* Tamanho do ícone maior */
+}
+
+.audio-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===================================
+   WRAPPER DE CONTEÚDO
+   =================================== */
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Alinha à esquerda */
+  padding: 2.5rem;
+  padding-left: 4%; /* Posicionamento do container */
+}
+
+.race-container {
+  width: 100%;
+  max-width: 550px; /* Largura máxima do container */
+  background: rgba(10, 15, 30, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid rgba(0, 255, 255, 0.35);
+  border-radius: 20px;
+  padding: 2rem; /* Espaçamento interno generoso */
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.25), inset 0 0 25px rgba(0, 255, 255, 0.06), 0 15px 50px rgba(0, 0, 0, 0.4);
+  max-height: 90vh; /* Altura máxima para permitir scroll */
+  overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+  animation: slideInContainer 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInContainer {
+  from {
+    opacity: 0;
+    transform: translateX(-60px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* ===================================
+   SCROLLBAR CUSTOMIZADA (para o race-container)
+   =================================== */
+.race-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.race-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.race-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ffff, #0088ff);
+  border-radius: 10px;
+}
+
+.race-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00ffff, #00aaff);
+}
+
+/* ===================================
+   HEADER
+   =================================== */
+.header-section {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  position: relative;
+}
+
+.main-title {
+  font-size: 1.9rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #00ffff, #0088ff, #ff00ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+  line-height: 1.3;
+  filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+  animation: titlePulse 3s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px rgba(0, 255, 255, 0.8));
+  }
+}
+
+.title-underline {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  margin-top: 1rem;
+  animation: underlineGlow 2s ease-in-out infinite;
+}
+
+@keyframes underlineGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  }
+}
+
+/* ===================================
+   DESCRIÇÃO
+   =================================== */
+.description-section {
+  margin-bottom: 1.8rem;
+  padding: 1.3rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 4px solid #00ffff;
+  border-radius: 8px;
+  box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.08);
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.description-text {
+  color: #e0e0e0;
+  line-height: 1.7;
+  font-size: 0.9rem;
+  margin-bottom: 0.7rem;
+}
+
+.description-text:last-child {
+  margin-bottom: 0;
+}
+
+.highlight-neon {
+  color: #00ffff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+.highlight-pink {
+  color: #ff00ff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+}
+
+.highlight-cyan {
+  color: #00ffff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+.highlight-green {
+  color: #00ff88;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+}
+
+/* ===================================
+   FORMULÁRIO
+   =================================== */
+.form-section {
+  margin-bottom: 1.8rem;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.input-grid {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-label {
+  color: #00ffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.5);
+}
+
+.input-field {
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(0, 255, 255, 0.35);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-weight: 500;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #00ffff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input-field:hover {
+  border-color: rgba(0, 255, 255, 0.5);
+}
+
+.input-field::-webkit-outer-spin-button,
+.input-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-field[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* ===================================
+   BOTÕES DE AÇÃO (CALCULAR/RETORNAR)
+   =================================== */
+.buttons-section {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 0.9rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn span {
+  position: relative;
+  z-index: 2;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.action-btn:hover::before {
+  opacity: 0;
+  transform: scale(0.5, 0.5);
+}
+
+.action-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  transform: scale(1.2, 1.2);
+  border-radius: 8px;
+}
+
+.action-btn:hover::after {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Variação para botão CALCULAR (azul neon) */
+.action-btn.btn-calculate {
+  color: #00ffff;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 136, 255, 0.05));
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+.action-btn.btn-calculate::before {
+  background-color: rgba(0, 255, 255, 0.2);
+}
+.action-btn.btn-calculate::after {
+  border-color: rgba(0, 255, 255, 0.8);
+}
+.action-btn.btn-calculate:hover {
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* Variação para botão RETORNAR (rosa neon) */
+.action-btn.btn-reset {
+  color: #ff00ff;
+  background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(157, 0, 255, 0.05));
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
+}
+.action-btn.btn-reset::before {
+  background-color: rgba(255, 0, 255, 0.2);
+}
+.action-btn.btn-reset::after {
+  border-color: rgba(255, 0, 255, 0.8);
+}
+.action-btn.btn-reset:hover {
+  color: #ff00ff;
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+}
+
+/* ===================================
+   SEÇÃO DE RESULTADOS
+   =================================== */
+.results-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(0, 255, 255, 0.4);
+  animation: fadeInSection 0.6s ease-out;
+}
+
+@keyframes fadeInSection {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.results-icon {
+  font-size: 2rem;
+  animation: rotateIcon 3s ease-in-out infinite;
+  color: #00ffff; /* Cor do ícone */
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+@keyframes rotateIcon {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+.results-title {
+  color: #00ffff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+/* ===================================
+   CARDS DE RESULTADO (Ações)
+   =================================== */
+.result-card {
+  margin-bottom: 1.2rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: slideInCard 0.5s ease-out backwards;
+}
+
+.result-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.result-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.result-card:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.result-card:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+@keyframes slideInCard {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  background: rgba(0, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  color: #00ffff;
+}
+
+.card-title {
+  color: #00ffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* Variações de cor para headers de cards (se necessário, adapte para seus tipos de IA) */
+.security-header {
+  background: rgba(0, 255, 255, 0.15);
+  border-bottom-color: rgba(0, 255, 255, 0.3);
+}
+.administrative-header {
+  background: rgba(0, 255, 136, 0.15);
+  border-bottom-color: rgba(0, 255, 136, 0.3);
+}
+.musical-header {
+  background: rgba(255, 0, 255, 0.15);
+  border-bottom-color: rgba(255, 0, 255, 0.3);
+}
+.hacked-header {
+  background: rgba(255, 136, 0, 0.15); /* Exemplo de cor para "hacked" */
+  border-bottom-color: rgba(255, 136, 0, 0.3);
+}
+
+.card-body {
+  padding: 1.2rem;
+}
+
+/* ===================================
+   LINHAS DE INFORMAÇÃO (dentro dos cards)
+   =================================== */
+.info-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-line:last-of-type {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #aaa;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.info-value {
+  color: #00ffff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* ===================================
+   SAÍDA FINAL DESTACADA
+   =================================== */
+.final-output-box {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.1));
+  border: 2px solid #00ffff;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+  animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+  }
+}
+
+.final-output-box h4 {
+  color: #00ffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+  margin-bottom: 0.8rem;
+}
+
+.final-output-box pre {
+  color: #e0ffff;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+/* ===================================
+   RESPONSIVIDADE
+   =================================== */
+@media (max-width: 1400px) {
+  .content-wrapper {
+    padding-left: 3%;
+  }
+
+  .race-container {
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content-wrapper {
+    justify-content: center; /* Centraliza o container em telas menores */
+    padding: 2rem;
+  }
+
+  .race-container {
+    max-width: 500px;
+  }
+
+  .main-title {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 1.5rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+
+  .race-container {
+    max-width: 100%;
+    padding: 1.8rem;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+  }
+
+  .buttons-section {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+
+  .audio-control {
+    width: 50px;
+    height: 50px;
+  }
+
+  .audio-control span {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 1.3rem;
+  }
+
+  .description-text {
+    font-size: 0.85rem;
+  }
+
+  .input-label {
+    font-size: 0.8rem;
+  }
+
+  .input-field {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .action-btn {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .race-container {
+    padding: 1.5rem;
+  }
+}
